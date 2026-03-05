@@ -108,13 +108,14 @@ export async function fetchTrustCardData(
   slug: string,
 ): Promise<TrustCardData> {
   const startup = await fetchStartup(slug);
+  const mrrCents = normalizeMrrToCents(startup.revenue.mrr);
 
   return {
     name: startup.name,
     slug: startup.slug,
     icon: startup.icon,
-    mrr: startup.revenue.mrr,
-    mrrFormatted: formatCents(startup.revenue.mrr),
+    mrr: mrrCents,
+    mrrFormatted: formatCents(mrrCents),
     growth30d: startup.growth30d,
     growthFormatted: formatGrowth(startup.growth30d),
     activeSubscriptions: startup.activeSubscriptions,
@@ -136,6 +137,17 @@ export function getMetalTier(mrrCents: number): MetalTier {
 }
 
 // ---- Formatting helpers ---------------------------------------------------
+
+/**
+ * Normalize MRR from API to a consistent "cents" value.
+ * TrustMRR docs say revenue.mrr is in USD cents, but some responses appear to
+ * return dollars (e.g. 502 for $502). We treat values under 1000 as dollars
+ * (convert to cents) and 1000+ as cents, so both 502 and 50200 display as $502.
+ */
+function normalizeMrrToCents(value: number): number {
+  if (value >= 1000) return value; // already in cents (e.g. 50200, 180000)
+  return Math.round(value * 100);   // assume dollars (e.g. 502 → 50200)
+}
 
 /** Convert USD cents to a human-readable dollar string, e.g. 180000 → "$1,800" */
 export function formatCents(cents: number): string {
