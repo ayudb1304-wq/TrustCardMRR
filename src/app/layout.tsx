@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter, Playwrite_NZ } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import Navbar from "@/components/Navbar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,6 +33,12 @@ export const metadata: Metadata = {
     "Generate embeddable, Stripe-verified MRR cards for your landing page. Powered by TrustMRR.",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -40,9 +47,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playwriteNZ.variable} ${inter.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${playwriteNZ.variable} ${inter.variable} antialiased overflow-x-hidden`}
         suppressHydrationWarning
       >
+        <Navbar />
         {children}
         <Analytics />
       </body>

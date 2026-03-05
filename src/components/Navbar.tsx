@@ -3,26 +3,30 @@ import Link from "next/link";
 export default function Navbar() {
   return (
     <nav
-      className="navbar bg-base-100/80 backdrop-blur-md border-b border-base-200 sticky top-0 z-50"
+      className="navbar bg-base-100/80 backdrop-blur-md border-b border-base-200 sticky top-0 z-50 min-h-14 overflow-x-hidden"
       aria-label="Main navigation"
     >
-      <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4">
+      <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-2 px-3 sm:px-4 min-w-0">
         <Link
           href="/"
-          className="text-lg font-extrabold tracking-tight"
+          className="text-base font-extrabold tracking-tight sm:text-lg min-h-10 flex items-center shrink-0"
           aria-label="TrustCard home"
         >
           TrustCard
         </Link>
-        <div className="flex items-center gap-1" role="menubar">
-          <Link href="/" className="btn btn-ghost btn-sm" role="menuitem">
+        <div className="flex items-center gap-0.5 sm:gap-1 flex-wrap justify-end min-w-0" role="menubar">
+          <Link
+            href="/"
+            className="btn btn-ghost btn-sm min-h-10 min-w-10 sm:min-w-0 px-2 sm:px-3"
+            role="menuitem"
+          >
             Dashboard
           </Link>
           <a
             href="https://trustmrr.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-ghost btn-sm"
+            className="btn btn-ghost btn-sm min-h-10 min-w-10 sm:min-w-0 px-2 sm:px-3"
             role="menuitem"
           >
             TrustMRR
@@ -31,7 +35,7 @@ export default function Navbar() {
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-ghost btn-sm"
+            className="btn btn-ghost btn-sm min-h-10 min-w-10 px-2 sm:px-3"
             role="menuitem"
             aria-label="GitHub"
           >

@@ -154,20 +154,73 @@
 
 ---
 
-## Phase 8: Launch & Marketing
+## Phase 8: Launch & Marketing ✅
 
 **Goal:** Get the first wave of users via the Marc Lou / TrustMRR community.
 
-- [ ] Craft launch tweet with own TrustCard as proof
-- [ ] Reply to Marc Lou's latest TrustMRR-related post with a demo
-- [ ] Post on:
-  - [ ] X/Twitter
-  - [ ] Reddit (r/SaaS, r/microsaas, r/EntrepreneurRideAlong)
+- [x] Craft launch tweet with own TrustCard as proof
+- [x] Reply to Marc Lou's latest TrustMRR-related post with a demo
+- [x] Post on:
+  - [x] X/Twitter
+  - [x] Reddit (r/SaaS, r/microsaas, r/EntrepreneurRideAlong)
   - [ ] Product Hunt (optional, schedule for next week)
-- [ ] Monitor analytics for first 48 hours
-- [ ] Collect feedback and iterate
+- [x] Monitor analytics for first 48 hours
+- [x] Collect feedback and iterate
 
 **Checkpoint 8:** First external founders have successfully embedded their TrustCards.
+
+---
+
+## Phase 9: Conversion & Engagement Optimizations
+
+**Goal:** Maximize the landing page's ability to convert a cold visitor into an active user within 30 seconds.
+
+### 9.1 — "Zero-Click" Dynamic Hero Preview (AHA Moment #1) ✅
+
+Currently the landing page requires a user to enter their slug before they see anything. Fix this with a featured founder card that loads instantly.
+
+- [x] Hardcode a "Featured Founder" card (e.g. `marclou` slug) directly into the Hero section
+- [x] Card must be visible the millisecond the page loads (server-side fetch or static data)
+- [x] Add subtle label like "Featured Founder" above the card
+- [x] Ensure the hero card does not interfere with the existing slug input flow
+
+**Why it works:** Shifts the visitor's brain from "What is this?" to "I want my startup to look like that" instantly.
+
+### 9.2 — "Live Search" Real-Time Preview (AHA Moment #2)
+
+Don't make them wait for a "Dashboard" — show their card as they type.
+
+- [ ] As the user types their slug, debounce-fetch and update a preview card in real-time on the landing page
+- [ ] Show a loading skeleton while fetching
+- [ ] Remove the explicit "Generate" button (or make it optional) — the preview updates automatically
+- [ ] Handle errors inline (invalid slug, rate limit) without disrupting the typing flow
+
+**Why it works:** Seeing their own live MRR data formatted into a beautiful card in under 2 seconds is the ultimate hook.
+
+### 9.3 — Immediate "Copy-Paste" Embed Code (AHA Moment #3)
+
+The moment they see their card, give them the embed code immediately.
+
+- [ ] Display the iframe/script embed code right next to the generated preview (no separate step)
+- [ ] Keep the tab selector (iframe / script tag) and copy button
+- [ ] Embed code appears as soon as the card data loads — zero extra clicks
+- [ ] Include a short "Paste this anywhere on your site" hint
+
+**Why it works:** Reduces friction between "discovery" and "implementation." If they can see their card and have it live on their site in 30 seconds, they are hooked.
+
+### 9.4 — Viral Social Proof: "Hall of Fame" (FOMO)
+
+Show other founders already using TrustCard to build trust.
+
+- [ ] Below the main input section, display 3–5 "Live Now" cards from real startups
+- [ ] Use a curated list of slugs (hardcoded or fetched at build time)
+- [ ] Add a section heading like "Live Now — Founders building in public"
+- [ ] Cards should be compact / smaller than the main preview
+- [ ] Optionally link each card to its `/card/{slug}` page
+
+**Why it works:** Creates FOMO — if other founders are already using "Verify-in-Public," the visitor will feel behind if they don't join.
+
+**Checkpoint 9:** A first-time visitor sees a featured card instantly, gets a live preview as they type, receives embed code immediately, and sees social proof from other founders — all without clicking a single button.
 
 ---
 

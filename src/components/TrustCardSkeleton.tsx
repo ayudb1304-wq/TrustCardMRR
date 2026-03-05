@@ -1,8 +1,14 @@
-export default function TrustCardSkeleton() {
+const DEFAULT_SKELETON_WIDTH = 400;
+
+export default function TrustCardSkeleton({ width }: { width?: number }) {
+  const w = width ?? DEFAULT_SKELETON_WIDTH;
   return (
     <div
-      className="animate-pulse rounded-2xl bg-base-300"
-      style={{ width: 400, aspectRatio: "1.586 / 1" }}
+      className="animate-pulse rounded-2xl bg-base-300 w-full"
+      style={{
+        maxWidth: w,
+        aspectRatio: "1.586 / 1",
+      }}
       role="status"
       aria-label="Loading TrustCard"
     >

@@ -7,3 +7,8 @@
   --font-card: var(--font-playwrite-nz);
   --font-flag: var(--font-inter);
 }
+
+/* Prevent horizontal overflow and improve touch targets on mobile */
+html {
+  overflow-x: hidden;
+}

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { fetchTrustCardData, TrustMRRError } from "@/lib/trustmrr";
-import TrustCard from "@/components/TrustCard";
+import EmbedCardClient from "./EmbedCardClient";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -27,10 +27,12 @@ export default async function EmbedPage({ params }: Props) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-transparent p-4">
-      <TrustCard data={data} width={400} />
+    <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-transparent p-4 w-full max-w-full overflow-x-hidden">
+      <div className="w-full flex justify-center min-w-0">
+        <EmbedCardClient data={data} />
+      </div>
 
-      <div className="flex items-center gap-3 text-xs text-base-content/40">
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs text-base-content/40 text-center">
         <a
           href={`https://trustmrr.com/startup/${slug}`}
           target="_blank"

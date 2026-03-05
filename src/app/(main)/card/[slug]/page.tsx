@@ -5,7 +5,7 @@ import {
   TrustMRRError,
   getMetalTier,
 } from "@/lib/trustmrr";
-import TrustCard from "@/components/TrustCard";
+import CardPageContent from "./CardPageContent";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -61,8 +61,8 @@ export default async function CardPage({ params }: Props) {
       notFound();
     }
     return (
-      <div className="flex min-h-screen items-center justify-center bg-base-200">
-        <div className="card w-96 bg-base-100 shadow-lg">
+      <div className="flex min-h-screen items-center justify-center bg-base-200 p-4">
+        <div className="card w-full max-w-md bg-base-100 shadow-lg">
           <div className="card-body items-center text-center">
             <h2 className="card-title text-error">Something went wrong</h2>
             <p className="text-base-content/60">
@@ -84,14 +84,16 @@ export default async function CardPage({ params }: Props) {
   const twitterIntent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-base-200 p-4">
-      <TrustCard data={data} />
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 sm:gap-6 bg-base-200 p-4 sm:p-6 w-full max-w-full overflow-x-hidden">
+      <div className="w-full flex justify-center min-w-0">
+        <CardPageContent data={data} />
+      </div>
 
-      <div className="flex flex-col items-center gap-2 text-sm text-base-content/50">
+      <div className="flex flex-col items-center gap-2 text-sm text-base-content/50 text-center">
         <p>
           {data.mrrFormatted} MRR · {data.growthFormatted} growth
         </p>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
           <a
             href={`https://trustmrr.com/startup/${slug}`}
             target="_blank"
@@ -104,7 +106,7 @@ export default async function CardPage({ params }: Props) {
             href={twitterIntent}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-sm gap-1.5"
+            className="btn btn-sm gap-1.5 min-h-10 sm:min-h-0"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

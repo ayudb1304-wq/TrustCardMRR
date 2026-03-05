@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-[calc(100vh-64px)] items-center justify-center bg-base-200 p-4">
+    <div className="flex min-h-[calc(100vh-64px)] items-center justify-center bg-base-200 p-4 w-full max-w-full overflow-x-hidden">
       <div className="card w-full max-w-md bg-base-100 shadow-lg">
         <div className="card-body items-center text-center">
           <span className="text-6xl font-extrabold text-base-content/10">
