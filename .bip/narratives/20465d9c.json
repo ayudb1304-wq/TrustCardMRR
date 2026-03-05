@@ -1,0 +1,6 @@
+{
+  "problem": "I wanted to share clear progress from \"TrustCard branding, em dash removal, footer, X share link to trustcardmrr.com\" without writing from scratch.",
+  "solution": "I summarized 23 changed file(s) (+1044/-90) and focused the story on src/app/(main)/integrations/[slug]/page.tsx, src/app/(main)/learn/[slug]/page.tsx, src/app/(main)/startup/[slug]/page.tsx.",
+  "risk": "Demo mode uses local heuristics, so details can be less precise than real AI generation.",
+  "testingNotes": "Switch to real mode with a Gemini key, then run quickstart again for richer drafts."
+}

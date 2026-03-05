@@ -13,6 +13,7 @@ export type MetallicBusinessCardProps = {
   website?: string;
   logoSrc?: string;
   logoAlt?: string;
+  badge?: React.ReactNode;
 
   metal?: Metal;
   width?: number;
@@ -75,6 +76,7 @@ export default function MetallicBusinessCard({
   website,
   logoSrc,
   logoAlt = 'Logo',
+  badge,
 
   metal = 'silver',
   width = 420,
@@ -248,6 +250,8 @@ export default function MetallicBusinessCard({
           className={['content', compact ? 'compact' : ''].join(' ')}
           style={{ alignItems: alignCss, textAlign }}
         >
+          {badge ? <div className="badge-slot">{badge}</div> : null}
+
           {logoSrc ? (
             <img
               src={logoSrc}
@@ -404,7 +408,39 @@ export default function MetallicBusinessCard({
           z-index: -1;
         }
         .content.compact {
-          padding: 0.85rem 1rem;
+          padding: 0.6rem 0.75rem;
+          gap: 0.25rem;
+        }
+        .content.compact .name {
+          font-size: 0.72rem;
+          line-height: 1.1;
+        }
+        .content.compact .role {
+          font-size: 0.6rem;
+          line-height: 1.15;
+        }
+        .content.compact .company {
+          font-size: 0.56rem;
+          line-height: 1.1;
+        }
+        .content.compact .contact {
+          font-size: 0.5rem;
+          gap: 0.08rem;
+        }
+        .content.compact .contact .item:last-child {
+          font-size: 0.44rem;
+        }
+
+        .badge-slot {
+          position: absolute;
+          top: 0.7rem;
+          left: 0.8rem;
+          z-index: 4;
+          line-height: 1;
+        }
+        .content.compact .badge-slot {
+          top: 0.4rem;
+          left: 0.5rem;
         }
 
         .logo {

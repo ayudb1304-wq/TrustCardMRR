@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import TrustCard from "@/components/TrustCard";
 import TrustCardSkeleton from "@/components/TrustCardSkeleton";
 import { useResponsiveCardWidth } from "@/hooks/useResponsiveCardWidth";
@@ -12,15 +12,17 @@ interface FetchError {
   message: string;
   isRateLimit: boolean;
   isNotFound: boolean;
+  isForbidden?: boolean; // 403 = not claimed
 }
 
 interface HomeClientProps {
   featuredCard: TrustCardData | null;
+  initialSlug?: string;
 }
 
-export default function HomeClient({ featuredCard }: HomeClientProps) {
+export default function HomeClient({ featuredCard, initialSlug = "" }: HomeClientProps) {
   const cardWidth = useResponsiveCardWidth();
-  const [slug, setSlug] = useState("");
+  const [slug, setSlug] = useState(initialSlug);
   const [data, setData] = useState<TrustCardData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<FetchError | null>(null);
@@ -48,6 +50,7 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
             message: msg,
             isRateLimit: res.status === 429,
             isNotFound: res.status === 404,
+            isForbidden: res.status === 403,
           } as FetchError;
         }
         const json = (await res.json()) as { data: TrustCardData };
@@ -61,6 +64,7 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
               err instanceof Error ? err.message : "Network error. Check your connection and try again.",
             isRateLimit: false,
             isNotFound: false,
+            isForbidden: (err as FetchError).isForbidden ?? false,
           });
         }
       } finally {
@@ -84,6 +88,14 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
     const trimmed = slug.trim().toLowerCase();
     if (trimmed) fetchCard(trimmed);
   }, [slug, fetchCard]);
+
+  // When landing with ?slug=, fetch that card once
+  const didInitialFetch = useRef(false);
+  useEffect(() => {
+    if (!initialSlug || didInitialFetch.current) return;
+    didInitialFetch.current = true;
+    fetchCard(initialSlug);
+  }, [initialSlug, fetchCard]);
 
   const iframeSnippet = data
     ? `<iframe\n  src="${baseUrl}/card/${data.slug}"\n  width="450"\n  height="320"\n  style="border:none;border-radius:16px;overflow:hidden"\n  loading="lazy"\n  title="${data.name} TrustCard"\n></iframe>`
@@ -130,9 +142,12 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
         <h1 className="text-2xl font-extrabold tracking-tight sm:text-4xl text-center">
           TrustCard
         </h1>
-              <p className="text-base-content/60 text-center max-w-md text-sm sm:text-base px-1 min-w-0">
-          Free verified MRR widget and revenue badge. Works with Stripe, LemonSqueezy, DodoPayment, Polar and more. Paste the embed on Framer, Webflow, or any site.
+        <p className="text-base-content/60 text-center max-w-md text-sm sm:text-base px-1 min-w-0">
+          Only verified founders can display a TrustCard. Claim your startup with X to get your embeddable revenue badge.
         </p>
+        <a href="/dashboard" className="link link-hover text-sm text-base-content/50 mt-1">
+          Manage my TrustCards →
+        </a>
       </div>
 
       {/* Featured Founder hero preview */}
@@ -143,18 +158,18 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
           </p>
           <TrustCard data={featuredCard} width={cardWidth} />
           <p className="text-xs text-base-content/40 italic text-center px-2">
-            Your startup could look like this. Enter your slug below.
+            Claim your startup to get a verified TrustCard like this.
           </p>
         </div>
       )}
 
-      <div className="mx-auto max-w-5xl px-3 sm:px-4 pb-12 sm:pb-20 w-full min-w-0">
+      <div id="generate" className="mx-auto max-w-5xl px-3 sm:px-4 pb-12 sm:pb-20 w-full min-w-0">
         {/* Slug input */}
         <form
           ref={formRef}
           onSubmit={handleSubmit}
           className="mx-auto flex w-full max-w-lg flex-col sm:flex-row sm:max-w-xl md:max-w-2xl items-stretch sm:items-center gap-2 sm:gap-2"
-          aria-label="Generate TrustCard"
+          aria-label="Claim Your Startup"
         >
           <label className="input input-bordered flex flex-1 min-w-0 items-center gap-1 sm:gap-2">
             <span className="text-base-content/40 text-xs sm:text-sm whitespace-nowrap shrink-0" aria-hidden="true">
@@ -176,12 +191,12 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
             type="submit"
             className="btn btn-primary shrink-0 min-h-11 sm:min-h-0"
             disabled={!slug.trim() || loading}
-            aria-label={loading ? "Generating card" : "Generate TrustCard"}
+            aria-label={loading ? "Looking up…" : "Claim Your Startup"}
           >
             {loading ? (
               <span className="loading loading-spinner loading-sm" aria-hidden="true" />
             ) : (
-              "Generate"
+              "Claim Your Startup"
             )}
           </button>
         </form>
@@ -191,7 +206,7 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
           <div className="mx-auto mt-4 w-full max-w-lg sm:max-w-xl md:max-w-2xl">
             <div
               role="alert"
-              className={`alert ${error.isRateLimit ? "alert-warning" : error.isNotFound ? "alert-info" : "alert-error"}`}
+              className={`alert ${error.isRateLimit ? "alert-warning" : error.isForbidden ? "alert-info" : error.isNotFound ? "alert-info" : "alert-error"}`}
             >
               {error.isNotFound ? (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
@@ -206,23 +221,35 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               )}
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-2">
                 <span className="font-semibold">
                   {error.isNotFound
                     ? "Startup not found"
-                    : error.isRateLimit
-                      ? "Too many requests"
-                      : "Something went wrong"}
+                    : error.isForbidden
+                      ? "Not claimed yet"
+                      : error.isRateLimit
+                        ? "Too many requests"
+                        : "Something went wrong"}
                 </span>
                 <span className="text-xs opacity-80">
                   {error.isNotFound
                     ? "Double-check the slug and try again."
-                    : error.isRateLimit
-                      ? "Please wait a moment and try again."
-                      : error.message}
+                    : error.isForbidden
+                      ? error.message
+                      : error.isRateLimit
+                        ? "Please wait a moment and try again."
+                        : error.message}
                 </span>
+                {error.isForbidden && slug.trim() && (
+                  <a
+                    href={`/claim?slug=${encodeURIComponent(slug.trim().toLowerCase())}`}
+                    className="btn btn-primary btn-sm mt-2 w-fit"
+                  >
+                    This is mine — Verify with X
+                  </a>
+                )}
               </div>
-              {!error.isNotFound && (
+              {!error.isNotFound && !error.isForbidden && (
                 <button
                   onClick={handleRetry}
                   className="btn btn-sm btn-ghost"

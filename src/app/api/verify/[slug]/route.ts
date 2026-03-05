@@ -3,6 +3,7 @@ import {
   fetchTrustCardData,
   TrustMRRError,
 } from "@/lib/trustmrr";
+import { getVerifiedStartup } from "@/lib/startup-db";
 
 export async function GET(
   _request: Request,
@@ -14,6 +15,18 @@ export async function GET(
     return NextResponse.json(
       { error: "Slug is required" },
       { status: 400 },
+    );
+  }
+
+  // 1. Only serve data for claimed & verified startups
+  const startupRecord = await getVerifiedStartup(slug);
+  if (!startupRecord) {
+    return NextResponse.json(
+      {
+        error:
+          "This startup has not been claimed by its owner. Claim your startup to get an embeddable TrustCard.",
+      },
+      { status: 403 },
     );
   }
 

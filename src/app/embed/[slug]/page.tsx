@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { fetchTrustCardData, TrustMRRError } from "@/lib/trustmrr";
+import { getVerifiedStartup, isDomainAllowed } from "@/lib/startup-db";
 import EmbedCardClient from "./EmbedCardClient";
 
 interface Props {
@@ -9,6 +11,29 @@ interface Props {
 export default async function EmbedPage({ params }: Props) {
   const { slug } = await params;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+
+  const startupRecord = await getVerifiedStartup(slug);
+  if (!startupRecord) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-transparent">
+        <p className="text-sm text-base-content/50">
+          This startup has not been claimed. Claim your startup to embed your TrustCard.
+        </p>
+      </div>
+    );
+  }
+
+  const headersList = await headers();
+  const referer = headersList.get("referer") ?? null;
+  if (!isDomainAllowed(startupRecord.allowedDomains, referer)) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-transparent">
+        <p className="text-sm text-base-content/50">
+          Embed is not allowed from this domain. Add this site in your TrustCard dashboard.
+        </p>
+      </div>
+    );
+  }
 
   let data;
   try {

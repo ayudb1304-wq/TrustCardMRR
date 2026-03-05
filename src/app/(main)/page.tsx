@@ -126,7 +126,7 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="mx-auto max-w-5xl px-4 pb-20">
+      <div id="generate" className="mx-auto max-w-5xl px-4 pb-20">
         {/* Slug input */}
         <form
           ref={formRef}

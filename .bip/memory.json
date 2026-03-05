@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "commitSha": "20465d9c68eb284de8cb2d2af2b662d2761aaae1",
+      "message": "TrustCard branding, em dash removal, footer, X share link to trustcardmrr.com",
+      "date": "2026-03-05T19:43:43+05:30",
+      "files": [
+        "src/app/(main)/card/[slug]/CardPageBody.tsx",
+        "src/app/(main)/card/[slug]/page.tsx",
+        "src/app/(main)/integrations/[slug]/page.tsx",
+        "src/app/(main)/integrations/page.tsx",
+        "src/app/(main)/layout.tsx",
+        "src/app/(main)/learn/[slug]/page.tsx",
+        "src/app/(main)/learn/page.tsx",
+        "src/app/(main)/page.tsx",
+        "src/app/(main)/startup/[slug]/page.tsx",
+        "src/app/HomeClient.tsx",
+        "src/app/api/og/[slug]/route.tsx",
+        "src/app/layout.tsx",
+        "src/app/page.tsx",
+        "src/app/sitemap.ts",
+        "src/components/FAQPageJsonLd.tsx",
+        "src/components/Footer.tsx",
+        "src/components/JsonLd.tsx",
+        "src/components/Navbar.tsx",
+        "src/components/OgImagePreload.tsx",
+        "src/components/WebPageJsonLd.tsx",
+        "src/lib/integrations.ts",
+        "src/lib/learn.ts",
+        "src/lib/trustmrr.ts"
+      ],
+      "problem": "I wanted to share clear progress from \"TrustCard branding, em dash removal, footer, X share link to trustcardmrr.com\" without writing from scratch.",
+      "solution": "I summarized 23 changed file(s) (+1044/-90) and focused the story on src/app/(main)/integrations/[slug]/page.tsx, src/app/(main)/learn/[slug]/page.tsx, src/app/(main)/startup/[slug]/page.tsx.",
+      "savedAt": "2026-03-05T18:23:45.590Z"
+    }
+  ]
+}

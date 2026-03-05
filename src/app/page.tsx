@@ -13,13 +13,18 @@ async function getFeaturedCard(): Promise<TrustCardData | null> {
   }
 }
 
-export default async function Home() {
+interface Props {
+  searchParams: Promise<{ slug?: string }>;
+}
+
+export default async function Home({ searchParams }: Props) {
+  const { slug: slugParam } = await searchParams;
   const featuredCard = await getFeaturedCard();
 
   return (
     <>
       <FAQPageJsonLd />
-      <HomeClient featuredCard={featuredCard} />
+      <HomeClient featuredCard={featuredCard} initialSlug={slugParam?.trim().toLowerCase() ?? ""} />
     </>
   );
 }

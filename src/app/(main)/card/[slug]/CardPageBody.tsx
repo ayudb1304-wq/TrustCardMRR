@@ -36,6 +36,20 @@ export default function CardPageBody({
         </p>
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
           <a
+            href={`${baseUrl}/claim?slug=${encodeURIComponent(slug)}`}
+            className="btn btn-sm btn-outline gap-1.5 min-h-10 sm:min-h-0"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+            This is mine — Claim & verify
+          </a>
+          <a
             href={`https://trustmrr.com/startup/${slug}`}
             target="_blank"
             rel="noopener noreferrer"

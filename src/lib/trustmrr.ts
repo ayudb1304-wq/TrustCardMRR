@@ -93,9 +93,16 @@ export class TrustMRRError extends Error {
  * Throws TrustMRRError on non-200 responses.
  */
 export async function fetchStartup(slug: string): Promise<TrustMRRStartup> {
-  const apiKey = process.env.TRUSTMRR_API_KEY;
+  const raw = process.env.TRUSTMRR_API_KEY;
+  const apiKey = typeof raw === "string" ? raw.trim() : "";
   if (!apiKey) {
     throw new TrustMRRError("TRUSTMRR_API_KEY is not configured", 500);
+  }
+  if (!apiKey.startsWith("tmrr_")) {
+    throw new TrustMRRError(
+      "TRUSTMRR_API_KEY must start with tmrr_. Get a valid key from TrustMRR.",
+      500,
+    );
   }
 
   const res = await fetch(`${TRUSTMRR_BASE}/${encodeURIComponent(slug)}`, {
@@ -122,7 +129,8 @@ export async function fetchStartup(slug: string): Promise<TrustMRRStartup> {
 export async function listAllStartupSlugs(): Promise<
   { slug: string; firstListedForSaleAt: string | null; onSale: boolean }[]
 > {
-  const apiKey = process.env.TRUSTMRR_API_KEY;
+  const raw = process.env.TRUSTMRR_API_KEY;
+  const apiKey = typeof raw === "string" ? raw.trim() : "";
   if (!apiKey) {
     return [];
   }

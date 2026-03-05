@@ -1,8 +1,9 @@
 import { ImageResponse } from "next/og";
 import { fetchTrustCardData, getMetalTier, formatProvider } from "@/lib/trustmrr";
 import type { MetalTier } from "@/lib/trustmrr";
+import { getVerifiedStartup } from "@/lib/startup-db";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 const playwriteNZFont = fetch(
   "https://fonts.gstatic.com/s/playwritenz/v12/d6lakaOxRsyr_zZDmUYvh2TW3NCQVvjKPjPjngAUeRs.ttf",
@@ -68,6 +69,32 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
+
+  const startupRecord = await getVerifiedStartup(slug);
+  if (!startupRecord) {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: 1200,
+            height: 630,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#111",
+            color: "#fff",
+            fontSize: 28,
+            fontFamily: "system-ui, sans-serif",
+            textAlign: "center",
+            padding: 48,
+          }}
+        >
+          <span>TrustCard | This startup has not been claimed yet. Claim your startup to get a shareable card.</span>
+        </div>
+      ),
+      { width: 1200, height: 630, status: 403 },
+    );
+  }
 
   try {
     const [playwriteData, interData] = await Promise.all([
