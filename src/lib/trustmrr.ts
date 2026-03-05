@@ -140,13 +140,16 @@ export function getMetalTier(mrrCents: number): MetalTier {
 
 /**
  * Normalize MRR from API to a consistent "cents" value.
- * TrustMRR docs say revenue.mrr is in USD cents, but some responses appear to
- * return dollars (e.g. 502 for $502). We treat values under 1000 as dollars
- * (convert to cents) and 1000+ as cents, so both 502 and 50200 display as $502.
+ * TrustMRR docs say revenue.mrr is in USD cents, but some responses return
+ * dollars. We use a heuristic:
+ * - value < 1000 → dollars (e.g. 502 → $502)
+ * - value >= 1000 and divisible by 100 → cents (e.g. 50200, 180000)
+ * - value >= 1000 and not divisible by 100 → dollars (e.g. 12989 → $12,989)
  */
 function normalizeMrrToCents(value: number): number {
-  if (value >= 1000) return value; // already in cents (e.g. 50200, 180000)
-  return Math.round(value * 100);   // assume dollars (e.g. 502 → 50200)
+  if (value < 1000) return Math.round(value * 100);
+  if (value % 100 === 0) return value;
+  return Math.round(value * 100);
 }
 
 /** Convert USD cents to a human-readable dollar string, e.g. 180000 → "$1,800" */
