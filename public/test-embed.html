@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrustCard Embed Test</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: #f5f5f5; padding: 2rem; }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    p { color: #666; margin-bottom: 2rem; }
+    section { margin-bottom: 3rem; }
+    h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #333; }
+    .embed-container { background: #fff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+  <h1>TrustCard — Embed Test Page</h1>
+  <p>This page tests both embed methods on a plain HTML page.</p>
+
+  <section>
+    <h2>Method 1: Script Tag Embed</h2>
+    <div class="embed-container">
+      <div data-trustcard-slug="datafast"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Method 2: iframe Embed</h2>
+    <div class="embed-container">
+      <iframe
+        src="/embed/datafast"
+        width="450"
+        height="320"
+        style="border:none;border-radius:16px;overflow:hidden"
+        loading="lazy"
+        title="datafast TrustCard"
+      ></iframe>
+    </div>
+  </section>
+
+  <script src="/embed.js" defer></script>
+</body>
+</html>
