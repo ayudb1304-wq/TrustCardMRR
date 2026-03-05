@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// TrustMRR API — types, fetcher, and formatting helpers
+// TrustMRR API: types, fetcher, and formatting helpers
 // ---------------------------------------------------------------------------
 
 const TRUSTMRR_BASE = "https://trustmrr.com/api/v1/startups";
@@ -20,6 +20,19 @@ export interface TrustMRRTechItem {
 export interface TrustMRRCofounder {
   xHandle: string;
   xName: string | null;
+}
+
+/** List item from GET /api/v1/startups (paginated list) */
+export interface TrustMRRStartupListItem {
+  slug: string;
+  onSale: boolean;
+  firstListedForSaleAt: string | null;
+}
+
+/** Response shape from GET /api/v1/startups */
+export interface TrustMRRListResponse {
+  data: TrustMRRStartupListItem[];
+  meta: { total: number; page: number; limit: number; hasMore: boolean };
 }
 
 /** Full response shape from GET /api/v1/startups/{slug} → data */
@@ -99,6 +112,49 @@ export async function fetchStartup(slug: string): Promise<TrustMRRStartup> {
 
   const json = (await res.json()) as { data: TrustMRRStartup };
   return json.data;
+}
+
+/**
+ * Fetch all startup slugs from the TrustMRR list API (paginated).
+ * Used for sitemap generation. Cached for 1 hour to respect rate limits.
+ * Returns array of { slug, firstListedForSaleAt, onSale }.
+ */
+export async function listAllStartupSlugs(): Promise<
+  { slug: string; firstListedForSaleAt: string | null; onSale: boolean }[]
+> {
+  const apiKey = process.env.TRUSTMRR_API_KEY;
+  if (!apiKey) {
+    return [];
+  }
+
+  const results: { slug: string; firstListedForSaleAt: string | null; onSale: boolean }[] = [];
+  let page = 1;
+  let hasMore = true;
+
+  while (hasMore) {
+    const res = await fetch(
+      `${TRUSTMRR_BASE}?page=${page}&limit=50`,
+      {
+        headers: { Authorization: `Bearer ${apiKey}` },
+        next: { revalidate: 3600 },
+      },
+    );
+
+    if (!res.ok) break;
+
+    const json = (await res.json()) as TrustMRRListResponse;
+    for (const item of json.data) {
+      results.push({
+        slug: item.slug,
+        firstListedForSaleAt: item.firstListedForSaleAt ?? null,
+        onSale: item.onSale ?? false,
+      });
+    }
+    hasMore = json.meta?.hasMore ?? false;
+    page++;
+  }
+
+  return results;
 }
 
 /**

@@ -22,6 +22,20 @@ export default function Navbar() {
           >
             Dashboard
           </Link>
+          <Link
+            href="/integrations"
+            className="btn btn-ghost btn-sm min-h-10 min-w-10 sm:min-w-0 px-2 sm:px-3"
+            role="menuitem"
+          >
+            Integrations
+          </Link>
+          <Link
+            href="/learn"
+            className="btn btn-ghost btn-sm min-h-10 min-w-10 sm:min-w-0 px-2 sm:px-3"
+            role="menuitem"
+          >
+            Learn
+          </Link>
           <a
             href="https://trustmrr.com"
             target="_blank"

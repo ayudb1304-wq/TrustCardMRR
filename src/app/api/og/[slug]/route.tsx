@@ -96,7 +96,7 @@ export async function GET(
             fontFamily: "Playwrite NZ, system-ui, sans-serif",
           }}
         >
-          {/* Card outer — simulates metallic surface with layered gradients */}
+          {/* Card outer: simulates metallic surface with layered gradients */}
           <div
             style={{
               display: "flex",
@@ -109,7 +109,7 @@ export async function GET(
               background: `linear-gradient(145deg, ${m.gradLight} 0%, ${m.bg} 40%, ${m.gradDark} 100%)`,
             }}
           >
-            {/* Sheen overlay — top-left highlight to simulate light reflection */}
+            {/* Sheen overlay: top-left highlight to simulate light reflection */}
             <div
               style={{
                 display: "flex",
@@ -123,7 +123,7 @@ export async function GET(
               }}
             />
 
-            {/* Dark vignette — bottom-right to add depth */}
+            {/* Dark vignette: bottom-right to add depth */}
             <div
               style={{
                 display: "flex",
@@ -165,7 +165,7 @@ export async function GET(
                 padding: "36px 42px",
               }}
             >
-              {/* Logo — top right */}
+              {/* Logo: top right */}
               <div
                 style={{
                   display: "flex",
@@ -204,7 +204,7 @@ export async function GET(
                 {data.name}
               </span>
 
-              {/* MRR — the hero number */}
+              {/* MRR: the hero number */}
               <span
                 style={{
                   fontSize: 32,
@@ -350,7 +350,7 @@ export async function GET(
             fontFamily: "system-ui, sans-serif",
           }}
         >
-          <span>TrustCard — Startup not found</span>
+          <span>TrustCard | Startup not found</span>
         </div>
       ),
       {

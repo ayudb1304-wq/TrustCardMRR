@@ -4,7 +4,7 @@ import {
   fetchTrustCardData,
   TrustMRRError,
 } from "@/lib/trustmrr";
-import CardPageBody from "./CardPageBody";
+import CardPageBody from "@/app/(main)/card/[slug]/CardPageBody";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function CardPage({ params }: Props) {
+export default async function StartupPage({ params }: Props) {
   const { slug } = await params;
 
   let data;

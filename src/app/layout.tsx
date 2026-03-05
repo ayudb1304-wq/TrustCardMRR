@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter, Playwrite_NZ } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { OrganizationAndAppJsonLd } from "@/components/JsonLd";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,9 +30,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000",
   ),
-  title: "TrustCard — Verified MRR Badges for Founders",
+  title: "TrustCard | Verified MRR Widget & Revenue Badge",
   description:
-    "Generate embeddable, Stripe-verified MRR cards for your landing page. Powered by TrustMRR.",
+    "Free trust badge for your landing page. Verified MRR widget. Works with Stripe, LemonSqueezy, DodoPayment, Polar, RevenueCat. Get your embed code.",
 };
 
 export const viewport: Viewport = {
@@ -50,8 +52,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${playwriteNZ.variable} ${inter.variable} antialiased overflow-x-hidden`}
         suppressHydrationWarning
       >
+        <OrganizationAndAppJsonLd />
         <Navbar />
-        {children}
+        <div className="flex min-h-screen flex-col">
+          {children}
+          <Footer />
+        </div>
         <Analytics />
       </body>
     </html>

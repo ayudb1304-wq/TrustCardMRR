@@ -58,7 +58,7 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
         } else {
           setError({
             message:
-              err instanceof Error ? err.message : "Network error — please check your connection",
+              err instanceof Error ? err.message : "Network error. Check your connection and try again.",
             isRateLimit: false,
             isNotFound: false,
           });
@@ -131,8 +131,7 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
           TrustCard
         </h1>
               <p className="text-base-content/60 text-center max-w-md text-sm sm:text-base px-1 min-w-0">
-          Generate embeddable, verified MRR badges for your landing page.
-          Powered by TrustMRR.
+          Free verified MRR widget and revenue badge. Works with Stripe, LemonSqueezy, DodoPayment, Polar and more. Paste the embed on Framer, Webflow, or any site.
         </p>
       </div>
 
@@ -144,7 +143,7 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
           </p>
           <TrustCard data={featuredCard} width={cardWidth} />
           <p className="text-xs text-base-content/40 italic text-center px-2">
-            Your startup could look like this — enter your slug below
+            Your startup could look like this. Enter your slug below.
           </p>
         </div>
       )}
@@ -154,7 +153,7 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
         <form
           ref={formRef}
           onSubmit={handleSubmit}
-          className="mx-auto flex flex-col sm:flex-row max-w-lg items-stretch sm:items-center gap-2 sm:gap-2"
+          className="mx-auto flex w-full max-w-lg flex-col sm:flex-row sm:max-w-xl md:max-w-2xl items-stretch sm:items-center gap-2 sm:gap-2"
           aria-label="Generate TrustCard"
         >
           <label className="input input-bordered flex flex-1 min-w-0 items-center gap-1 sm:gap-2">
@@ -168,7 +167,7 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
               autoFocus
-              aria-label="TrustMRR startup slug"
+              aria-label="TrustCard startup slug"
               autoComplete="off"
               spellCheck={false}
             />
@@ -189,7 +188,7 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
 
         {/* Error */}
         {error && (
-          <div className="mx-auto mt-4 max-w-lg">
+          <div className="mx-auto mt-4 w-full max-w-lg sm:max-w-xl md:max-w-2xl">
             <div
               role="alert"
               className={`alert ${error.isRateLimit ? "alert-warning" : error.isNotFound ? "alert-info" : "alert-error"}`}
@@ -254,7 +253,7 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
               <TrustCard data={data} width={cardWidth} />
               <div className="flex flex-wrap items-center justify-center gap-2">
                 <a
-                  href={`/card/${data.slug}`}
+                  href={`/startup/${data.slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="link link-hover text-xs text-base-content/40 py-1"
@@ -289,7 +288,7 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
                   Download PNG
                 </button>
                 <a
-                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Just verified my revenue with @TrustMRR! 🚀\n\n${data.mrrFormatted} MRR · ${data.growthFormatted} growth`)}&url=${encodeURIComponent(`${baseUrl}/card/${data.slug}`)}`}
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Just verified my revenue with TrustCard! 🚀\n\n${data.mrrFormatted} MRR · ${data.growthFormatted} growth`)}&url=${encodeURIComponent(`https://trustcardmrr.com/startup/${data.slug}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-sm gap-1.5 min-h-9"
@@ -382,7 +381,7 @@ export default function HomeClient({ featuredCard }: HomeClientProps) {
               {/* Hint */}
               <p className="text-xs text-base-content/40">
                 {activeTab === "iframe"
-                  ? "Paste this HTML anywhere on your site. Works in Framer, Webflow, WordPress, and plain HTML."
+                  ? "Paste this revenue embed code anywhere on your site. Works in Framer, Webflow, WordPress, and plain HTML. Your card shows your verified provider (Stripe, LemonSqueezy, DodoPayment, etc.)."
                   : "Add the div where you want the card, and include the script once per page. It auto-injects the iframe."}
               </p>
 

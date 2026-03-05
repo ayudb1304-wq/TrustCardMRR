@@ -52,7 +52,7 @@ export default function Home() {
         } else {
           setError({
             message:
-              err instanceof Error ? err.message : "Network error — please check your connection",
+              err instanceof Error ? err.message : "Network error. Check your connection and try again.",
             isRateLimit: false,
             isNotFound: false,
           });
@@ -266,7 +266,7 @@ export default function Home() {
                   Download PNG
                 </button>
                 <a
-                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Just verified my revenue with @TrustMRR! 🚀\n\n${data.mrrFormatted} MRR · ${data.growthFormatted} growth`)}&url=${encodeURIComponent(`${baseUrl}/card/${data.slug}`)}`}
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Just verified my revenue with TrustCard! 🚀\n\n${data.mrrFormatted} MRR · ${data.growthFormatted} growth`)}&url=${encodeURIComponent(`https://trustcardmrr.com/card/${data.slug}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-sm gap-1.5"
