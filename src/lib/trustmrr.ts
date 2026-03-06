@@ -74,7 +74,13 @@ export interface TrustCardData {
   growthFormatted: string;
   activeSubscriptions: number;
   paymentProvider: string;
+  isFounder?: boolean;
+  projectCount?: number;
 }
+
+export type PokemonType = "fire" | "water" | "grass";
+
+export const POKEMON_TYPES: PokemonType[] = ["fire", "water", "grass"];
 
 // ---- Fetcher --------------------------------------------------------------
 
@@ -184,6 +190,71 @@ export async function fetchTrustCardData(
     growthFormatted: formatGrowth(startup.growth30d),
     activeSubscriptions: startup.activeSubscriptions,
     paymentProvider: startup.paymentProvider,
+  };
+}
+
+/**
+ * Fetch all startups for a founder's X handle and return aggregated stats.
+ * Used when the slug starts with "@".
+ */
+export async function fetchFounderProfile(
+  handle: string,
+): Promise<TrustCardData> {
+  const raw = process.env.TRUSTMRR_API_KEY;
+  const apiKey = typeof raw === "string" ? raw.trim() : "";
+  if (!apiKey) {
+    throw new TrustMRRError("TRUSTMRR_API_KEY is not configured", 500);
+  }
+
+  const res = await fetch(
+    `${TRUSTMRR_BASE}?xHandle=${encodeURIComponent(handle)}&limit=50`,
+    {
+      headers: { Authorization: `Bearer ${apiKey}` },
+      next: { revalidate: 120 },
+    },
+  );
+
+  if (!res.ok) {
+    throw new TrustMRRError(`TrustMRR API returned ${res.status}`, res.status);
+  }
+
+  const json = (await res.json()) as TrustMRRListResponse;
+  if (json.data.length === 0) {
+    throw new TrustMRRError(`No startups found for @${handle}`, 404);
+  }
+
+  const startups = await Promise.all(
+    json.data.map((item) => fetchStartup(item.slug)),
+  );
+
+  let totalMrrCents = 0;
+  let totalSubs = 0;
+  let growthSum = 0;
+  let growthCount = 0;
+
+  for (const s of startups) {
+    totalMrrCents += normalizeMrrToCents(s.revenue.mrr);
+    totalSubs += s.activeSubscriptions;
+    if (s.growth30d !== null) {
+      growthSum += s.growth30d;
+      growthCount++;
+    }
+  }
+
+  const avgGrowth = growthCount > 0 ? growthSum / growthCount : null;
+
+  return {
+    name: `@${handle}`,
+    slug: `@${handle}`,
+    icon: startups[0]?.icon ?? null,
+    mrr: totalMrrCents,
+    mrrFormatted: formatCents(totalMrrCents),
+    growth30d: avgGrowth,
+    growthFormatted: formatGrowth(avgGrowth),
+    activeSubscriptions: totalSubs,
+    paymentProvider: startups[0]?.paymentProvider ?? "stripe",
+    isFounder: true,
+    projectCount: startups.length,
   };
 }
 

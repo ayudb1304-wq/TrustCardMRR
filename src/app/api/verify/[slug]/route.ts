@@ -18,7 +18,16 @@ export async function GET(
     );
   }
 
-  // 1. Only serve data for claimed & verified startups
+  if (slug.startsWith("@")) {
+    return NextResponse.json(
+      {
+        error:
+          "Founder portfolio cards require Twitter verification. Log in and verify your handle from the dashboard.",
+      },
+      { status: 403 },
+    );
+  }
+
   const startupRecord = await getVerifiedStartup(slug);
   if (!startupRecord) {
     return NextResponse.json(

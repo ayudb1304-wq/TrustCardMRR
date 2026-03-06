@@ -13,7 +13,7 @@ export async function GET() {
 
   const startups = await db.startup.findMany({
     where: { ownerId: session.user.id },
-    select: { slug: true, allowedDomains: true, isVerified: true },
+    select: { slug: true, allowedDomains: true, isVerified: true, template: true, pokemonType: true },
     orderBy: { slug: "asc" },
   });
 

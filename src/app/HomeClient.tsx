@@ -4,9 +4,11 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import TrustCard from "@/components/TrustCard";
 import TrustCardSkeleton from "@/components/TrustCardSkeleton";
 import { useResponsiveCardWidth } from "@/hooks/useResponsiveCardWidth";
-import type { TrustCardData } from "@/lib/trustmrr";
+import type { TrustCardData, PokemonType } from "@/lib/trustmrr";
+import { POKEMON_TYPES } from "@/lib/trustmrr";
 
 type Tab = "iframe" | "script";
+type Template = "metallic" | "pokemon";
 
 interface FetchError {
   message: string;
@@ -29,6 +31,8 @@ export default function HomeClient({ featuredCard, initialSlug = "" }: HomeClien
   const [activeTab, setActiveTab] = useState<Tab>("iframe");
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [template, setTemplate] = useState<Template>("metallic");
+  const [pokemonType, setPokemonType] = useState<PokemonType>("fire");
   const formRef = useRef<HTMLFormElement>(null);
 
   const baseUrl =
@@ -156,7 +160,42 @@ export default function HomeClient({ featuredCard, initialSlug = "" }: HomeClien
           <p className="text-xs font-semibold uppercase tracking-widest text-base-content/40">
             Featured Founder
           </p>
-          <TrustCard data={featuredCard} width={cardWidth} />
+
+          <div className="flex flex-col items-center gap-2">
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className={`btn btn-sm ${template === "metallic" ? "btn-primary" : "btn-ghost"}`}
+                onClick={() => setTemplate("metallic")}
+              >
+                ✨ Metallic
+              </button>
+              <button
+                type="button"
+                className={`btn btn-sm ${template === "pokemon" ? "btn-primary" : "btn-ghost"}`}
+                onClick={() => setTemplate("pokemon")}
+              >
+                ⚡ Pokémon
+              </button>
+            </div>
+            {template === "pokemon" && (
+              <div className="flex gap-2">
+                {POKEMON_TYPES.map((pt) => (
+                  <button
+                    key={pt}
+                    type="button"
+                    className={`btn btn-sm ${pokemonType === pt ? "btn-secondary" : "btn-outline"}`}
+                    onClick={() => setPokemonType(pt)}
+                  >
+                    {pt === "fire" ? "🔥" : pt === "water" ? "💧" : "🌿"}{" "}
+                    {pt.charAt(0).toUpperCase() + pt.slice(1)}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <TrustCard data={featuredCard} width={cardWidth} template={template} pokemonType={pokemonType} />
           <p className="text-xs text-base-content/40 italic text-center px-2">
             Claim your startup to get a verified TrustCard like this.
           </p>
@@ -168,37 +207,39 @@ export default function HomeClient({ featuredCard, initialSlug = "" }: HomeClien
         <form
           ref={formRef}
           onSubmit={handleSubmit}
-          className="mx-auto flex w-full max-w-lg flex-col sm:flex-row sm:max-w-xl md:max-w-2xl items-stretch sm:items-center gap-2 sm:gap-2"
+          className="mx-auto w-full max-w-md sm:max-w-xl md:max-w-2xl"
           aria-label="Claim Your Startup"
         >
-          <label className="input input-bordered flex flex-1 min-w-0 items-center gap-1 sm:gap-2">
-            <span className="text-base-content/40 text-xs sm:text-sm whitespace-nowrap shrink-0" aria-hidden="true">
-              trustmrr.com/startup/
-            </span>
-            <input
-              type="text"
-              placeholder="your-slug"
-              className="grow min-w-0 bg-transparent outline-none"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              autoFocus
-              aria-label="TrustCard startup slug"
-              autoComplete="off"
-              spellCheck={false}
-            />
-          </label>
-          <button
-            type="submit"
-            className="btn btn-primary shrink-0 min-h-11 sm:min-h-0"
-            disabled={!slug.trim() || loading}
-            aria-label={loading ? "Looking up…" : "Claim Your Startup"}
-          >
-            {loading ? (
-              <span className="loading loading-spinner loading-sm" aria-hidden="true" />
-            ) : (
-              "Claim Your Startup"
-            )}
-          </button>
+          <div className="rounded-2xl bg-base-100 shadow-lg ring-1 ring-base-content/5 p-3 sm:p-4 flex flex-col sm:flex-row items-stretch gap-2.5 sm:gap-3">
+            <label className="relative flex flex-1 min-w-0 items-center gap-1.5 sm:gap-2 rounded-xl bg-base-200/60 px-3 sm:px-4 py-2.5 sm:py-3 transition-colors focus-within:bg-base-200 focus-within:ring-2 focus-within:ring-primary/30">
+              <span className="text-base-content/35 text-[11px] sm:text-sm whitespace-nowrap shrink-0 font-medium" aria-hidden="true">
+                trustmrr.com/startup/
+              </span>
+              <input
+                type="text"
+                placeholder="your-slug"
+                className="grow min-w-0 bg-transparent outline-none text-sm sm:text-base font-semibold text-base-content placeholder:font-normal placeholder:text-base-content/30"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                autoFocus
+                aria-label="TrustCard startup slug"
+                autoComplete="off"
+                spellCheck={false}
+              />
+            </label>
+            <button
+              type="submit"
+              className="btn btn-primary shrink-0 rounded-xl min-h-12 sm:min-h-0 sm:px-6 text-sm font-bold shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all"
+              disabled={!slug.trim() || loading}
+              aria-label={loading ? "Looking up…" : "Claim Your Startup"}
+            >
+              {loading ? (
+                <span className="loading loading-spinner loading-sm" aria-hidden="true" />
+              ) : (
+                "Claim Your Startup"
+              )}
+            </button>
+          </div>
         </form>
 
         {/* Error */}
@@ -277,7 +318,43 @@ export default function HomeClient({ featuredCard, initialSlug = "" }: HomeClien
               <h2 className="text-sm font-semibold uppercase tracking-widest text-base-content/40">
                 Live Preview
               </h2>
-              <TrustCard data={data} width={cardWidth} />
+
+              {/* Card Style Selector */}
+              <div className="flex flex-col items-center gap-2 w-full">
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    className={`btn btn-sm ${template === "metallic" ? "btn-primary" : "btn-ghost"}`}
+                    onClick={() => setTemplate("metallic")}
+                  >
+                    ✨ Metallic
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn btn-sm ${template === "pokemon" ? "btn-primary" : "btn-ghost"}`}
+                    onClick={() => setTemplate("pokemon")}
+                  >
+                    ⚡ Pokémon
+                  </button>
+                </div>
+                {template === "pokemon" && (
+                  <div className="flex gap-2">
+                    {POKEMON_TYPES.map((pt) => (
+                      <button
+                        key={pt}
+                        type="button"
+                        className={`btn btn-sm ${pokemonType === pt ? "btn-secondary" : "btn-outline"}`}
+                        onClick={() => setPokemonType(pt)}
+                      >
+                        {pt === "fire" ? "🔥" : pt === "water" ? "💧" : "🌿"}{" "}
+                        {pt.charAt(0).toUpperCase() + pt.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <TrustCard data={data} width={cardWidth} template={template} pokemonType={pokemonType} />
               <div className="flex flex-wrap items-center justify-center gap-2">
                 <a
                   href={`/startup/${data.slug}`}

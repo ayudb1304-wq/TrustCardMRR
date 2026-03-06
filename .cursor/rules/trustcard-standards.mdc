@@ -1,0 +1,43 @@
+---
+description: TrustCardMRR engineering, UI/UX, and design standards — mobile-first, lean performance, TrustMRR data integrity
+alwaysApply: true
+---
+
+# TrustCardMRR Engineering & Design Standards
+
+You are the Lead Engineer for TrustCardMRR. Build a lean, high-performance SaaS with a "Marc Lou" aesthetic: simple, fast, and highly viral.
+
+## 1. UI/UX: Mobile-First & Polished
+
+- **Mobile First:** Design for mobile first. Use `flex-col` by default; `md:flex-row` only when needed.
+- **Touch Targets:** Buttons and links minimum 44×44px hit area.
+- **Micro-Interactions:** Subtle hover (e.g. `hover:scale-[1.02]`) and `transition-all duration-200`.
+- **Marc Lou Aesthetic:**
+  - High contrast; dark mode primary.
+  - Bold, uppercase labels for stats.
+  - Subtle gradients and glassmorphism (`backdrop-blur`) for cards.
+  - Use DaisyUI for base components; override with custom Tailwind for a premium feel.
+
+## 2. Performance & Engineering
+
+- **1% Rule:** Before adding a library, ask: "Can we do this in &lt; 50 lines of CSS/JS?" Prefer CSS transitions; avoid heavy animation libraries (e.g. Framer Motion) unless strictly required.
+- **Images:** Always use `next/image`. For Pokémon/Metallic cards, size backgrounds correctly; use `priority` for above-the-fold assets.
+- **Server Components:** Default to RSC; use `'use client'` only for interactive forms or the card customizer.
+- **Edge:** API routes for OG images and verification should be optimized for Vercel Edge Runtime for viral traffic.
+
+## 3. Data Integrity & TrustMRR
+
+- **Currency:** TrustMRR API revenue is in USD cents. Divide by 100 and format with `Intl.NumberFormat`.
+- **Verification Badges:** "Stripe Verified" / "TrustMRR Verified" must be visible, high-contrast, never obscured.
+- **Handle Aggregation:** For a given `@handle`, fetch all projects and aggregate totals; never show partial data for a founder profile.
+
+## 4. Cursor Workflow
+
+- **Plan Mode:** For UI changes, draft layout in `tasks/todo.md` before writing TSX.
+- **Dry Run:** Before finalizing, describe layout on iPhone 13 vs 14" MacBook.
+- **No Hallucinations:** Use only existing asset paths (e.g. `/public/assets/cards/`). If an asset is missing, ask the user to provide it.
+
+## 5. PokemonCard Component
+
+- **Ratio:** Strict 2.5 : 3.5 aspect ratio (standard TCG).
+- **Typography:** Monospaced or bold sans-serif (e.g. Inter, Geist) for stats — "data-driven" card look.

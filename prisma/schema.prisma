@@ -67,6 +67,8 @@ model Startup {
   ownerId         String
   isVerified      Boolean  @default(false)
   allowedDomains  String[] @default([])
+  template        String   @default("metallic")
+  pokemonType     String   @default("fire")
 
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 

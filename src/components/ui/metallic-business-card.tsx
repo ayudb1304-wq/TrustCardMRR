@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useId, useRef } from 'react';
+import styles from './metallic-business-card.module.css';
 
 type Metal = 'gold' | 'silver' | 'bronze' | 'platinum';
 
@@ -36,14 +37,13 @@ const METAL_BG: Record<Metal, string> = {
   platinum: '#ffffff',
 };
 
-// Metal-aware ink/glow tokens (picked to contrast each finish)
 const METAL_TOKENS: Record<
   Metal,
   { ink: string; sub: string; glow1: string; glow2: string }
 > = {
   gold: {
-    ink: 'oklch(0.22 0.06 70)',     // deep warm ink
-    sub: 'oklch(0.38 0.03 70)',     // softer warm
+    ink: 'oklch(0.22 0.06 70)',
+    sub: 'oklch(0.38 0.03 70)',
     glow1: 'rgba(255, 215, 170, .55)',
     glow2: 'rgba(255, 235, 200, .28)',
   },
@@ -54,7 +54,7 @@ const METAL_TOKENS: Record<
     glow2: 'rgba(255, 215, 185, .26)',
   },
   silver: {
-    ink: 'oklch(0.16 0 240)',       // neutral charcoal
+    ink: 'oklch(0.16 0 240)',
     sub: 'oklch(0.40 0 240)',
     glow1: 'rgba(255, 255, 255, .46)',
     glow2: 'rgba(245, 245, 255, .22)',
@@ -183,11 +183,15 @@ export default function MetallicBusinessCard({
 
   const ink = METAL_TOKENS[metal];
 
+  const contentClasses = [styles.content, compact ? styles.compact : '']
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <div
       ref={wrapRef}
       data-theme={wrapMode}
-      className={['metal-wrap', className].join(' ')}
+      className={[styles.metalWrap, className].filter(Boolean).join(' ')}
       style={
         {
           '--bg-card': METAL_BG[metal],
@@ -202,7 +206,6 @@ export default function MetallicBusinessCard({
       role="region"
       aria-labelledby={titleId}
     >
-      {/* unique SVG noise filter */}
       <svg width="0" height="0" aria-hidden="true" focusable="false">
         <filter
           id={ids.noise}
@@ -239,50 +242,49 @@ export default function MetallicBusinessCard({
 
       <div
         ref={cardRef}
-        className="card"
+        className={styles.card}
         style={{ width, height }}
         onPointerMove={handlePointer}
         onPointerLeave={resetTargets}
         onBlur={resetTargets}
       >
-        {/* content layer */}
         <div
-          className={['content', compact ? 'compact' : ''].join(' ')}
-          style={{ alignItems: alignCss, textAlign }}
+          className={contentClasses}
+          style={{ alignItems: alignCss, textAlign, justifyItems: alignCss } as React.CSSProperties}
         >
-          {badge ? <div className="badge-slot">{badge}</div> : null}
+          {badge ? <div className={styles.badgeSlot}>{badge}</div> : null}
 
           {logoSrc ? (
             <img
               src={logoSrc}
               alt={logoAlt}
-              className="logo"
+              className={styles.logo}
               aria-hidden={logoAlt ? undefined : true}
             />
           ) : null}
 
-          <div className="text-block">
-            <h3 id={titleId} className="name">
+          <div className={styles.textBlock} style={{ textAlign }}>
+            <h3 id={titleId} className={styles.name}>
               {name}
             </h3>
-            {role ? <p className="role">{role}</p> : null}
-            {company ? <p className="company">{company}</p> : null}
+            {role ? <p className={styles.role}>{role}</p> : null}
+            {company ? <p className={styles.company}>{company}</p> : null}
           </div>
 
           {(email || phone || website) && (
-            <div className="contact">
+            <div className={styles.contact} style={{ textAlign }}>
               {email ? (
-                <p className="item" aria-label={`Email ${email}`}>
+                <p className={styles.item} aria-label={`Email ${email}`}>
                   {email}
                 </p>
               ) : null}
               {phone ? (
-                <p className="item" aria-label={`Phone ${phone}`}>
+                <p className={styles.item} aria-label={`Phone ${phone}`}>
                   {phone}
                 </p>
               ) : null}
               {website ? (
-                <p className="item" aria-label={`Website ${website}`}>
+                <p className={styles.item} aria-label={`Website ${website}`}>
                   {website}
                 </p>
               ) : null}
@@ -290,246 +292,6 @@ export default function MetallicBusinessCard({
           )}
         </div>
       </div>
-
-      <style jsx>{`
-        .metal-wrap {
-          --gradient-rotation: 0deg;
-          --gradient-position-x: 50%;
-          --gradient-position-y: 50%;
-          --rotate-x: 0deg;
-          --rotate-y: 0deg;
-          display: grid;
-          place-items: center;
-          color-scheme: light dark;
-          font-family: var(--font-playwrite-nz), ui-sans-serif, system-ui,
-            Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji',
-            'Segoe UI Emoji';
-        }
-        .metal-wrap[data-theme='dark'] {
-          background: #000;
-        }
-        .metal-wrap[data-theme='light'] {
-          background: #fff;
-        }
-
-        .card {
-          position: relative;
-          border-radius: var(--border-radius);
-          transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
-          transform-style: preserve-3d;
-          transition: transform 0.1s ease-out, box-shadow 0.2s ease-out;
-          overflow: hidden;
-          box-shadow: 0 10px 50px rgba(0, 0, 0, 0.25),
-            inset -1px -1px 2px rgba(0, 0, 0, 0.3),
-            inset 1px 1px 2px rgba(255, 255, 255, 0.3);
-          background:
-            radial-gradient(
-              ellipse 160% 120% at var(--gradient-position-x)
-                var(--gradient-position-y),
-              transparent 0%,
-              rgba(0, 0, 0, 1) 100%
-            ),
-            conic-gradient(
-              from var(--gradient-rotation) at 50% 50%,
-              rgba(0, 0, 0, 0.6) -120deg,
-              rgba(255, 255, 255, 0.4) 9deg,
-              rgba(0, 0, 0, 0.4) 60deg,
-              rgba(0, 0, 0, 0.06) 107deg,
-              rgba(0, 0, 0, 0.3) 131deg,
-              rgba(0, 0, 0, 0) 188deg,
-              rgba(0, 0, 0, 0.6) 240deg,
-              rgba(255, 255, 255, 0.4) 367deg
-            ),
-            var(--bg-card);
-        }
-        .card::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          border-radius: var(--border-radius);
-          filter: var(--noise-filter);
-          opacity: 0.25;
-          z-index: 1;
-        }
-        .card::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          border-radius: var(--border-radius);
-          background: var(--bg-card);
-          mix-blend-mode: color;
-          z-index: 2;
-        }
-
-        /* content layer */
-        .content {
-          position: absolute;
-          inset: 0;
-          z-index: 3;
-          display: grid;
-          grid-template-rows: 1fr auto auto;
-          gap: 0.45rem;
-          padding: 1.1rem 1.25rem;
-          /* readable ink on reflective bg */
-          color: var(--ink);
-          text-shadow:
-            0 1px 0 rgba(255, 255, 255, 0.30),
-            0 8px 22px var(--glow-1),
-            0 2px 10px var(--glow-2);
-          -webkit-font-smoothing: antialiased;
-          text-rendering: optimizeLegibility;
-        }
-        :global([data-theme='dark']) .content {
-          /* nudge contrast in dark canvas */
-          text-shadow:
-            0 1px 0 rgba(255, 255, 255, 0.22),
-            0 10px 26px var(--glow-1),
-            0 3px 12px var(--glow-2);
-        }
-
-        /* glass panel for readability */
-        .content::before {
-          content: '';
-          position: absolute;
-          inset: 0.6rem;
-          border-radius: calc(var(--border-radius) - 8px);
-          background: linear-gradient(
-              180deg,
-              rgba(255, 255, 255, 0.08),
-              rgba(255, 255, 255, 0.02)
-            ),
-            radial-gradient(
-              80% 40% at 50% 0%,
-              rgba(255, 255, 255, 0.06),
-              transparent 60%
-            );
-          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-          backdrop-filter: blur(2px) saturate(1.07);
-          z-index: -1;
-        }
-        .content.compact {
-          padding: 0.6rem 0.75rem;
-          gap: 0.25rem;
-        }
-        .content.compact .name {
-          font-size: 0.72rem;
-          line-height: 1.1;
-        }
-        .content.compact .role {
-          font-size: 0.6rem;
-          line-height: 1.15;
-        }
-        .content.compact .company {
-          font-size: 0.56rem;
-          line-height: 1.1;
-        }
-        .content.compact .contact {
-          font-size: 0.5rem;
-          gap: 0.08rem;
-        }
-        .content.compact .contact .item:last-child {
-          font-size: 0.44rem;
-        }
-
-        .badge-slot {
-          position: absolute;
-          top: 0.7rem;
-          left: 0.8rem;
-          z-index: 4;
-          line-height: 1;
-        }
-        .content.compact .badge-slot {
-          top: 0.4rem;
-          left: 0.5rem;
-        }
-
-        .logo {
-          position: absolute;
-          top: 0.9rem;
-          right: 0.9rem;
-          height: 28px;
-          width: auto;
-          object-fit: contain;
-          filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.35));
-          pointer-events: none;
-        }
-        .content.compact .logo {
-          top: 0.6rem;
-          right: 0.6rem;
-          height: 22px;
-        }
-
-        .text-block {
-          align-self: end;
-          display: grid;
-          gap: 0.15rem;
-        }
-
-        /* Name: slightly heavier with subtle stroke for metals */
-        .name {
-          margin: 0;
-          font-weight: 800;
-          letter-spacing: 0.01em;
-          line-height: 1.12;
-          font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.25rem);
-          color: var(--ink);
-          /* subtle outline for bright metals */
-          -webkit-text-stroke: 0.25px rgba(0, 0, 0, 0.25);
-        }
-
-        .role {
-          margin: 0.05rem 0 0 0;
-          color: var(--ink);
-          font-weight: 800;
-          letter-spacing: 0.02em;
-          line-height: 1.25;
-          font-size: 0.92rem;
-          
-        }
-
-        .company {
-          margin: 0.1rem 0 0 0;
-          color: var(--ink);
-          font-weight: 700;
-          font-size: 0.9rem;
-          letter-spacing: 0.01em;
-          line-height: 1.18;
-          font-variant-caps: all-small-caps;
-        }
-
-        .contact {
-          align-self: end;
-          display: grid;
-          gap: 0.14rem;
-          color: var(--ink);
-          font-size: 0.80rem;
-          letter-spacing: 0.015em;
-          font-weight: 700;
-        }
-        .contact .item {
-          margin: 0;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        .contact .item:last-child {
-          font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-          font-weight: 600;
-          letter-spacing: 0.04em;
-          font-size: 0.72rem;
-          text-transform: uppercase;
-          opacity: 0.75;
-        }
-
-        /* alignment helpers */
-        .content {
-          justify-items: ${alignCss};
-        }
-        .text-block,
-        .contact {
-          text-align: ${textAlign};
-        }
-      `}</style>
     </div>
   );
 }

@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import MetallicBusinessCard from "@/components/ui/metallic-business-card";
-import type { TrustCardData } from "@/lib/trustmrr";
+import PokemonCard from "@/components/ui/pokemon-card";
+import type { TrustCardData, PokemonType } from "@/lib/trustmrr";
 import { getMetalTier, formatProvider } from "@/lib/trustmrr";
 
 export interface TrustCardProps {
   data: TrustCardData;
   width?: number;
+  template?: "metallic" | "pokemon";
+  pokemonType?: PokemonType;
 }
 
 const RAMEN_THRESHOLD_CENTS = 200_000; // $2,000
@@ -41,7 +44,23 @@ function RamenBadge({ tweetHref }: { tweetHref: string }) {
   );
 }
 
-export default function TrustCard({ data, width = 420 }: TrustCardProps) {
+export default function TrustCard({
+  data,
+  width = 420,
+  template = "metallic",
+  pokemonType = "fire",
+}: TrustCardProps) {
+  if (template === "pokemon") {
+    return (
+      <PokemonCard
+        data={data}
+        pokemonType={pokemonType}
+        isFounder={data.isFounder}
+        width={width}
+      />
+    );
+  }
+
   const metal = getMetalTier(data.mrr);
   const provider = formatProvider(data.paymentProvider);
   const isRamen = data.mrr >= RAMEN_THRESHOLD_CENTS;

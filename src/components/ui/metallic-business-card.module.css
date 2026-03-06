@@ -1,0 +1,221 @@
+.metalWrap {
+  --gradient-rotation: 0deg;
+  --gradient-position-x: 50%;
+  --gradient-position-y: 50%;
+  --rotate-x: 0deg;
+  --rotate-y: 0deg;
+  display: grid;
+  place-items: center;
+  color-scheme: light dark;
+  font-family: var(--font-playwrite-nz), ui-sans-serif, system-ui,
+    Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji',
+    'Segoe UI Emoji';
+}
+.metalWrap[data-theme='dark'] {
+  background: #000;
+}
+.metalWrap[data-theme='light'] {
+  background: #fff;
+}
+
+.card {
+  position: relative;
+  border-radius: var(--border-radius);
+  transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out, box-shadow 0.2s ease-out;
+  overflow: hidden;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.25),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.3),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.3);
+  background:
+    radial-gradient(
+      ellipse 160% 120% at var(--gradient-position-x)
+        var(--gradient-position-y),
+      transparent 0%,
+      rgba(0, 0, 0, 1) 100%
+    ),
+    conic-gradient(
+      from var(--gradient-rotation) at 50% 50%,
+      rgba(0, 0, 0, 0.6) -120deg,
+      rgba(255, 255, 255, 0.4) 9deg,
+      rgba(0, 0, 0, 0.4) 60deg,
+      rgba(0, 0, 0, 0.06) 107deg,
+      rgba(0, 0, 0, 0.3) 131deg,
+      rgba(0, 0, 0, 0) 188deg,
+      rgba(0, 0, 0, 0.6) 240deg,
+      rgba(255, 255, 255, 0.4) 367deg
+    ),
+    var(--bg-card);
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--border-radius);
+  filter: var(--noise-filter);
+  opacity: 0.25;
+  z-index: 1;
+}
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--border-radius);
+  background: var(--bg-card);
+  mix-blend-mode: color;
+  z-index: 2;
+}
+
+.content {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  gap: 0.45rem;
+  padding: 1.1rem 1.25rem;
+  color: var(--ink);
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.30),
+    0 8px 22px var(--glow-1),
+    0 2px 10px var(--glow-2);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+:global([data-theme='dark']) .content {
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.22),
+    0 10px 26px var(--glow-1),
+    0 3px 12px var(--glow-2);
+}
+
+.content::before {
+  content: '';
+  position: absolute;
+  inset: 0.6rem;
+  border-radius: calc(var(--border-radius) - 8px);
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.08),
+      rgba(255, 255, 255, 0.02)
+    ),
+    radial-gradient(
+      80% 40% at 50% 0%,
+      rgba(255, 255, 255, 0.06),
+      transparent 60%
+    );
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(2px) saturate(1.07);
+  z-index: -1;
+}
+.compact {
+  padding: 0.6rem 0.75rem;
+  gap: 0.25rem;
+}
+.compact .name {
+  font-size: 0.72rem;
+  line-height: 1.1;
+}
+.compact .role {
+  font-size: 0.6rem;
+  line-height: 1.15;
+}
+.compact .company {
+  font-size: 0.56rem;
+  line-height: 1.1;
+}
+.compact .contact {
+  font-size: 0.5rem;
+  gap: 0.08rem;
+}
+.compact .contact .item:last-child {
+  font-size: 0.44rem;
+}
+
+.badgeSlot {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.8rem;
+  z-index: 4;
+  line-height: 1;
+}
+.compact .badgeSlot {
+  top: 0.4rem;
+  left: 0.5rem;
+}
+
+.logo {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.35));
+  pointer-events: none;
+}
+.compact .logo {
+  top: 0.6rem;
+  right: 0.6rem;
+  height: 22px;
+}
+
+.textBlock {
+  align-self: end;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.name {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  line-height: 1.12;
+  font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.25rem);
+  color: var(--ink);
+  -webkit-text-stroke: 0.25px rgba(0, 0, 0, 0.25);
+}
+
+.role {
+  margin: 0.05rem 0 0 0;
+  color: var(--ink);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  font-size: 0.92rem;
+}
+
+.company {
+  margin: 0.1rem 0 0 0;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  line-height: 1.18;
+  font-variant-caps: all-small-caps;
+}
+
+.contact {
+  align-self: end;
+  display: grid;
+  gap: 0.14rem;
+  color: var(--ink);
+  font-size: 0.80rem;
+  letter-spacing: 0.015em;
+  font-weight: 700;
+}
+.item {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.item:last-child {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
