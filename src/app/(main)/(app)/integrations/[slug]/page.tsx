@@ -54,8 +54,8 @@ export default async function IntegrationPage({ params }: Props) {
             <Link href="/integrations" className="btn btn-primary btn-sm mt-4">
               Browse integrations
             </Link>
-            <Link href="/" className="btn btn-ghost btn-sm">
-              Home
+            <Link href="/dashboard" className="btn btn-ghost btn-sm">
+              Dashboard
             </Link>
           </div>
         </div>
@@ -68,10 +68,10 @@ export default async function IntegrationPage({ params }: Props) {
       <div className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
         <div className="mb-8">
           <Link
-            href="/"
+            href="/integrations"
             className="text-sm text-base-content/50 hover:text-base-content"
           >
-            ← TrustCard
+            ← Integrations
           </Link>
         </div>
 

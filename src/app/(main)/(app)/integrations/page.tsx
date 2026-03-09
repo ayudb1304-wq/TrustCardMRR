@@ -15,15 +15,6 @@ export default function IntegrationsIndexPage() {
   return (
     <div className="min-h-screen bg-base-200">
       <div className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
-        <div className="mb-8">
-          <Link
-            href="/"
-            className="text-sm text-base-content/50 hover:text-base-content"
-          >
-            ← TrustCard
-          </Link>
-        </div>
-
         <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
           Integrations
         </h1>

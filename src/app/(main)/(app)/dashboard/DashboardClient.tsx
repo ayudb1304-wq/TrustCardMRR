@@ -41,6 +41,7 @@ export default function DashboardClient() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [previewType, setPreviewType] = useState<PokemonType>("fire");
+  const [stats, setStats] = useState<{ cardCount: number; totalMrrFormatted: string } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -58,6 +59,22 @@ export default function DashboardClient() {
     })();
     return () => { cancelled = true; };
   }, []);
+
+  useEffect(() => {
+    if (!startups.length) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/dashboard/stats");
+        if (!res.ok) return;
+        const json = await res.json();
+        if (!cancelled) setStats({ cardCount: json.cardCount, totalMrrFormatted: json.totalMrrFormatted ?? "—" });
+      } catch {
+        // ignore
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [startups.length]);
 
   const patchStartup = async (
     slug: string,
@@ -133,14 +150,44 @@ export default function DashboardClient() {
 
   if (startups.length === 0) {
     return (
-      <div className="card bg-base-100 shadow">
-        <div className="card-body">
-          <p className="text-base-content/60">
-            You haven&apos;t claimed any startups yet. Claim your startup from the homepage to add embed domains and manage your TrustCard here.
-          </p>
-          <a href="/" className="btn btn-primary btn-sm w-fit">
-            Claim Your Startup →
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <a
+            href="/"
+            className="card bg-base-100 shadow hover:shadow-md transition-shadow border border-base-300"
+          >
+            <div className="card-body py-5">
+              <h3 className="font-semibold text-base-content">Claim a startup</h3>
+              <p className="text-sm text-base-content/60">
+                Enter your TrustMRR slug on the homepage and verify with X to get your first TrustCard.
+              </p>
+              <span className="link link-primary text-sm mt-1">Go to homepage →</span>
+            </div>
           </a>
+          <a
+            href="/integrations"
+            className="card bg-base-100 shadow hover:shadow-md transition-shadow border border-base-300"
+          >
+            <div className="card-body py-5">
+              <h3 className="font-semibold text-base-content">View integrations</h3>
+              <p className="text-sm text-base-content/60">
+                See how to embed your badge in Framer, Webflow, WordPress, and more.
+              </p>
+              <span className="link link-primary text-sm mt-1">Browse integrations →</span>
+            </div>
+          </a>
+        </div>
+        <div className="card bg-base-100 shadow border border-base-300">
+          <div className="card-body items-center text-center py-12">
+            <p className="text-5xl text-base-content/20 mb-2" aria-hidden>◇</p>
+            <h2 className="card-title text-lg text-base-content">No TrustCards yet</h2>
+            <p className="text-base-content/60 max-w-md">
+              You haven&apos;t claimed any startups yet. Claim your startup from the homepage to add embed domains and manage your TrustCard here.
+            </p>
+            <a href="/" className="btn btn-primary mt-4">
+              Claim your first startup
+            </a>
+          </div>
         </div>
       </div>
     );
@@ -148,6 +195,49 @@ export default function DashboardClient() {
 
   return (
     <div className="space-y-6">
+      {/* Stats overview */}
+      {stats && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="rounded-xl bg-base-100 border border-base-300 p-4 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-widest text-base-content/50">Verified revenue</p>
+            <p className="text-xl font-bold text-base-content mt-1">{stats.totalMrrFormatted}</p>
+            <p className="text-xs text-base-content/60 mt-0.5">MRR across your cards</p>
+          </div>
+          <div className="rounded-xl bg-base-100 border border-base-300 p-4 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-widest text-base-content/50">Active cards</p>
+            <p className="text-xl font-bold text-base-content mt-1">{stats.cardCount}</p>
+            <p className="text-xs text-base-content/60 mt-0.5">TrustCards claimed</p>
+          </div>
+        </div>
+      )}
+
+      {/* Quick actions */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <a
+          href="/"
+          className="card bg-base-100 shadow-sm hover:shadow transition-shadow border border-base-300"
+        >
+          <div className="card-body py-4 flex-row items-center gap-3">
+            <span className="text-2xl opacity-70" aria-hidden>+</span>
+            <div>
+              <h3 className="font-semibold text-sm text-base-content">Claim another startup</h3>
+              <p className="text-xs text-base-content/60">Add a new TrustMRR slug</p>
+            </div>
+          </div>
+        </a>
+        <a
+          href="/integrations"
+          className="card bg-base-100 shadow-sm hover:shadow transition-shadow border border-base-300"
+        >
+          <div className="card-body py-4 flex-row items-center gap-3">
+            <span className="text-2xl opacity-70" aria-hidden>◇</span>
+            <div>
+              <h3 className="font-semibold text-sm text-base-content">Integrations</h3>
+              <p className="text-xs text-base-content/60">Embed guides by platform</p>
+            </div>
+          </div>
+        </a>
+      </div>
       {startups.map((s) => (
         <div key={s.slug} className="card bg-base-100 shadow">
           <div className="card-body">

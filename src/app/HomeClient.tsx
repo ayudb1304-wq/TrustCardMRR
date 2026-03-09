@@ -6,6 +6,7 @@ import TrustCardSkeleton from "@/components/TrustCardSkeleton";
 import { useResponsiveCardWidth } from "@/hooks/useResponsiveCardWidth";
 import type { TrustCardData, PokemonType } from "@/lib/trustmrr";
 import { POKEMON_TYPES } from "@/lib/trustmrr";
+import { LANDING_FAQ } from "@/lib/faq-data";
 
 type Tab = "iframe" | "script";
 type Template = "metallic" | "pokemon";
@@ -141,18 +142,29 @@ export default function HomeClient({ featuredCard, initialSlug = "" }: HomeClien
 
   return (
     <div className="min-h-screen bg-base-200 overflow-x-hidden w-full">
-      {/* Hero */}
-      <div className="flex flex-col items-center gap-2 pt-6 pb-4 px-4 sm:pt-12 sm:pb-8 sm:px-6">
-        <h1 className="text-2xl font-extrabold tracking-tight sm:text-4xl text-center">
+      {/* Hero — value prop + primary CTA */}
+      <section className="flex flex-col items-center gap-4 pt-8 pb-6 px-4 sm:pt-16 sm:pb-12 sm:px-6 text-center">
+        <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl text-base-content">
           TrustCard
         </h1>
-        <p className="text-base-content/60 text-center max-w-md text-sm sm:text-base px-1 min-w-0">
-          Only verified founders can display a TrustCard. Claim your startup with X to get your embeddable revenue badge.
+        <p className="text-lg sm:text-xl text-base-content/70 max-w-xl">
+          Verify in public. Let verified data do the selling for you.
         </p>
-        <a href="/dashboard" className="link link-hover text-sm text-base-content/50 mt-1">
-          Manage my TrustCards →
-        </a>
-      </div>
+        <p className="text-base-content/60 max-w-md text-sm sm:text-base">
+          Only verified founders can display a TrustCard. Claim your startup with X and get an embeddable revenue badge for your landing page.
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
+          <a
+            href="#generate"
+            className="btn btn-primary btn-lg rounded-xl shadow-lg shadow-primary/20"
+          >
+            Get your badge
+          </a>
+          <a href="/dashboard" className="link link-hover text-sm text-base-content/50 font-medium">
+            Manage my TrustCards →
+          </a>
+        </div>
+      </section>
 
       {/* Featured Founder hero preview */}
       {showHeroPreview && (
@@ -517,6 +529,94 @@ export default function HomeClient({ featuredCard, initialSlug = "" }: HomeClien
           </div>
         )}
       </div>
+
+      {/* Social Proof — Metal Tiers */}
+      <section className="border-t border-base-300 bg-base-100/50 py-12 sm:py-16 px-4">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2 className="text-xl font-bold sm:text-2xl text-base-content">
+            Trust tiers for every stage
+          </h2>
+          <p className="mt-2 text-base-content/60 text-sm sm:text-base max-w-lg mx-auto">
+            Your verified MRR determines your card tier. Show progress at a glance.
+          </p>
+          <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="rounded-xl bg-base-200 p-4 sm:p-5 flex flex-col items-center gap-2 border border-base-300">
+              <span className="inline-block h-8 w-8 rounded-full bg-amber-700 shrink-0" aria-hidden />
+              <span className="font-semibold text-sm">Bronze</span>
+              <span className="text-xs text-base-content/60">$0 – $499</span>
+            </div>
+            <div className="rounded-xl bg-base-200 p-4 sm:p-5 flex flex-col items-center gap-2 border border-base-300">
+              <span className="inline-block h-8 w-8 rounded-full bg-gray-400 shrink-0" aria-hidden />
+              <span className="font-semibold text-sm">Silver</span>
+              <span className="text-xs text-base-content/60">$500 – $2.5K</span>
+            </div>
+            <div className="rounded-xl bg-base-200 p-4 sm:p-5 flex flex-col items-center gap-2 border border-base-300">
+              <span className="inline-block h-8 w-8 rounded-full bg-yellow-400 shrink-0" aria-hidden />
+              <span className="font-semibold text-sm">Gold</span>
+              <span className="text-xs text-base-content/60">$2.5K – $10K</span>
+            </div>
+            <div className="rounded-xl bg-base-200 p-4 sm:p-5 flex flex-col items-center gap-2 border border-base-300 col-span-2 lg:col-span-1">
+              <span className="inline-block h-8 w-8 rounded-full bg-white border-2 border-base-300 shrink-0" aria-hidden />
+              <span className="font-semibold text-sm">Platinum</span>
+              <span className="text-xs text-base-content/60">$10K+</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How it Works */}
+      <section className="py-12 sm:py-16 px-4">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="text-xl font-bold sm:text-2xl text-base-content">
+            How it works
+          </h2>
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6">
+            <div className="flex flex-col items-center gap-3">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-content font-bold text-lg shrink-0" aria-hidden>1</span>
+              <h3 className="font-semibold text-base-content">Claim</h3>
+              <p className="text-sm text-base-content/60">
+                Enter your TrustMRR startup slug. We look up your verified revenue.
+              </p>
+            </div>
+            <div className="flex flex-col items-center gap-3">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-content font-bold text-lg shrink-0" aria-hidden>2</span>
+              <h3 className="font-semibold text-base-content">Verify</h3>
+              <p className="text-sm text-base-content/60">
+                Sign in with X and claim your startup. Only the linked owner can verify.
+              </p>
+            </div>
+            <div className="flex flex-col items-center gap-3">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-content font-bold text-lg shrink-0" aria-hidden>3</span>
+              <h3 className="font-semibold text-base-content">Embed</h3>
+              <p className="text-sm text-base-content/60">
+                Copy the iframe or script tag and paste it on your site. Done.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="border-t border-base-300 bg-base-100/50 py-12 sm:py-16 px-4">
+        <div className="mx-auto max-w-2xl">
+          <h2 className="text-xl font-bold sm:text-2xl text-base-content text-center">
+            Frequently asked questions
+          </h2>
+          <div className="mt-8 join join-vertical w-full">
+            {LANDING_FAQ.map(({ question, answer }, i) => (
+              <div key={question} className="collapse collapse-arrow join-item border border-base-300 bg-base-100">
+                <input type="radio" name="faq-accordion" defaultChecked={i === 0} aria-label={question} />
+                <div className="collapse-title font-medium text-base-content">
+                  {question}
+                </div>
+                <div className="collapse-content text-base-content/70 text-sm">
+                  <p>{answer}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
